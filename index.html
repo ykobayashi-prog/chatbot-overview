@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIチャットボット回答精度改善 | 全体像</title>
+<style>
+  :root {
+    --blue: #2096D5;
+    --blue-dark: #1a7ab8;
+    --blue-pale: #e8f4fb;
+    --ink: #1f2933;
+    --ink-2: #52606d;
+    --ink-3: #9aa5b1;
+    --line: #e4e7eb;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --good: #1a7f4e;
+    --good-bg: #e6f4ec;
+    --warn: #b7791f;
+    --warn-bg: #fbf0dc;
+    --now: #2096D5;
+    --now-bg: #e8f4fb;
+    --wait: #9aa5b1;
+    --wait-bg: #f1f3f5;
+    --danger: #c0392b;
+    --danger-bg: #fdecea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.7; font-size: 15px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  header.hero {
+    background: linear-gradient(120deg, #1a7ab8, #2096D5);
+    color: #fff; border-radius: 14px; padding: 28px 32px; margin-bottom: 28px;
+  }
+  header.hero .kicker { font-size: 13px; opacity: .85; letter-spacing: .08em; }
+  header.hero h1 { font-size: 26px; margin: 6px 0 10px; }
+  header.hero .meta { font-size: 13px; opacity: .9; }
+  .now-banner {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.45);
+    border-radius: 999px; padding: 5px 16px; margin-top: 14px; font-size: 14px; font-weight: bold;
+  }
+  .now-banner .dot { width: 9px; height: 9px; border-radius: 50%; background: #ffe37a; }
+
+  h2 {
+    font-size: 19px; margin: 40px 0 14px; padding-left: 12px;
+    border-left: 5px solid var(--blue);
+  }
+  h2 .sub { font-size: 13px; color: var(--ink-2); font-weight: normal; margin-left: 10px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; }
+
+  /* 課題カード */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .grid3 { grid-template-columns: 1fr; } }
+  .issue { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .issue .no {
+    display: inline-block; background: var(--blue-pale); color: var(--blue-dark);
+    font-weight: bold; font-size: 12px; border-radius: 6px; padding: 2px 10px; margin-bottom: 8px;
+  }
+  .issue h3 { font-size: 15px; margin-bottom: 6px; }
+  .issue p { font-size: 13px; color: var(--ink-2); }
+
+  .arrow-note {
+    margin-top: 14px; background: var(--danger-bg); border: 1px solid #f2c4bd;
+    border-radius: 10px; padding: 12px 18px; font-size: 14px; color: var(--danger); font-weight: bold;
+  }
+
+  /* stat tiles */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .tiles { grid-template-columns: 1fr; } }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; }
+  .tile .label { font-size: 12px; color: var(--ink-2); letter-spacing: .04em; }
+  .tile .value { font-size: 26px; font-weight: bold; margin-top: 4px; }
+  .tile .value .from { font-size: 15px; color: var(--ink-3); font-weight: normal; }
+  .tile .value .arrow { color: var(--blue); margin: 0 4px; }
+  .tile .note { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+
+  /* 取り組みテーブル */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--card); }
+  th, td { border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top; }
+  th { background: #eef2f6; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+  td .tag {
+    display: inline-block; font-size: 11px; font-weight: bold; border-radius: 5px;
+    padding: 1px 8px; margin-right: 6px; white-space: nowrap;
+  }
+  .tag.plan1 { background: var(--blue-pale); color: var(--blue-dark); }
+  .tag.plan2 { background: #efe8fb; color: #6b46c1; }
+  .tag.tech  { background: #f1f3f5; color: var(--ink-2); }
+
+  /* ステップタイムライン */
+  .timeline { position: relative; margin-top: 6px; }
+  .step {
+    position: relative; display: grid; grid-template-columns: 46px 1fr; gap: 0 16px;
+    padding-bottom: 22px;
+  }
+  .step::before {
+    content: ''; position: absolute; left: 22px; top: 44px; bottom: -2px;
+    width: 2px; background: var(--line);
+  }
+  .step:last-child::before { display: none; }
+  .step .badge {
+    width: 46px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: bold; flex-shrink: 0; z-index: 1;
+  }
+  .step.done   .badge { background: var(--good-bg); color: var(--good); }
+  .step.now    .badge { background: var(--now-bg); color: var(--now); box-shadow: 0 0 0 3px rgba(32,150,213,.25); }
+  .step.wait   .badge { background: var(--wait-bg); color: var(--wait); }
+  .step .body { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 20px; }
+  .step.now .body { border: 2px solid var(--blue); box-shadow: 0 4px 14px rgba(32,150,213,.12); }
+  .step .head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .step .head h3 { font-size: 15.5px; }
+  .status {
+    font-size: 11.5px; font-weight: bold; border-radius: 999px; padding: 2px 12px; white-space: nowrap;
+  }
+  .status.done { background: var(--good-bg); color: var(--good); }
+  .status.now  { background: var(--now-bg);  color: var(--now); }
+  .status.wait { background: var(--wait-bg); color: var(--ink-2); }
+  .step .who { font-size: 12px; color: var(--ink-2); margin-left: auto; white-space: nowrap; }
+  .step ul { margin: 8px 0 0 20px; font-size: 13.5px; color: var(--ink-2); }
+  .step ul li { margin: 3px 0; }
+  .step ul li strong { color: var(--ink); }
+
+  /* 指摘4点 */
+  .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .findings { grid-template-columns: 1fr; } }
+  .finding { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+  .finding .sev {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: bold; border-radius: 5px; padding: 2px 10px; margin-bottom: 8px;
+  }
+  .sev.must { background: var(--danger-bg); color: var(--danger); }
+  .sev.should { background: var(--warn-bg); color: var(--warn); }
+  .finding h3 { font-size: 14.5px; margin-bottom: 6px; }
+  .finding p { font-size: 13px; color: var(--ink-2); }
+  .finding code { background: #f1f3f5; border-radius: 4px; padding: 0 5px; font-size: 12px; }
+
+  footer { margin-top: 48px; font-size: 12px; color: var(--ink-3); text-align: center; }
+  a { color: var(--blue-dark); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">biima sports ｜ CS下期テーマ × マーケ局</div>
+    <h1>AIチャットボット 回答精度改善プロジェクト 全体像</h1>
+    <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月25日</div>
+    <div class="now-banner"><span class="dot"></span>現在地：STEP 3 ─ 統合FAQの品質チェック完了、指摘4点の修正対応中</div>
+  </header>
+
+  <!-- ============ 課題 ============ -->
+  <h2>1. 課題 <span class="sub">なぜやるのか（稲積さん報告・局会合意済み）</span></h2>
+  <div class="grid3">
+    <div class="issue">
+      <span class="no">課題 ①</span>
+      <h3>FAQが細分化されすぎている</h3>
+      <p>「振替・欠席」だけで約25項目など、類似テーマのQ&Aが細切れに分散。現行シートは計314項目・カテゴリ表記も不統一。</p>
+    </div>
+    <div class="issue">
+      <span class="no">課題 ②</span>
+      <h3>情報の「つまみ食い」＝架空ルールの生成</h3>
+      <p>AIが複数のQ&Aから一部ずつ抽出・合成し、「振替も欠席もどちらも直前まで可」のような実在しないルールを案内してしまう（ハルシネーション）。</p>
+    </div>
+    <div class="issue">
+      <span class="no">課題 ③</span>
+      <h3>解決したかどうかを測れない</h3>
+      <p>回答後に「解決した／しなかった」を選ぶ仕組みがなく、解決率が算出できない。改善しても効果を数字で示せない。</p>
+    </div>
+  </div>
+  <div class="arrow-note">⚠ 誤った案内 → お客様の混乱・クレームに直結するリスクを抱えている状態</div>
+
+  <!-- ============ 目的 ============ -->
+  <h2>2. 目的 <span class="sub">どうなったら成功か</span></h2>
+  <div class="card">
+    <ul style="margin-left: 20px;">
+      <li><strong>正確性：</strong>情報の混同による架空ルールの案内をなくし、クレームリスクを解消する</li>
+      <li><strong>測定可能性：</strong>「解決率」を計測できる状態にし、改善効果を定量で語れるようにする（CS下期テーマの成果指標）</li>
+      <li><strong>運用効率：</strong>参照データを整理・半減させ、CSがメンテしやすいFAQ構造にする（副次効果として応答速度・API費用も改善）</li>
+    </ul>
+  </div>
+
+  <!-- ============ 取り組み内容 ============ -->
+  <h2>3. 取り組み内容 <span class="sub">何をやるか（起案2本＋技術改修3点）</span></h2>
+
+  <div class="tiles" style="margin-bottom: 16px;">
+    <div class="tile">
+      <div class="label">FAQ項目数</div>
+      <div class="value"><span class="from">314件</span><span class="arrow">→</span>27件</div>
+      <div class="note">マスターQ&Aに統合（8カテゴリ）</div>
+    </div>
+    <div class="tile">
+      <div class="label">AIに渡す参照テキスト量</div>
+      <div class="value"><span class="from">約2.9万字</span><span class="arrow">→</span>約1.4万字</div>
+      <div class="note">半減 ─ 混同リスク低下・応答も軽く</div>
+    </div>
+    <div class="tile">
+      <div class="label">解決率の計測</div>
+      <div class="value"><span class="from">不可</span><span class="arrow">→</span>可能に</div>
+      <div class="note">解決確認ボタンを新規実装</div>
+    </div>
+  </div>
+
+  <table>
+    <tr><th style="width:120px;">区分</th><th>内容</th><th style="width:110px;">主担当</th></tr>
+    <tr>
+      <td><span class="tag plan1">起案 1</span></td>
+      <td><strong>FAQデータの構造最適化</strong> ─ 314項目を27のマスターQ&Aに統合した新データ（「ChatBot修正内容」シート）を本番の参照元に差し替える。変動情報（測定会など）はマイページ誘導に徹し、「振替の〜」「退会の〜」と主語を徹底して取り違えを構造的に防ぐ</td>
+      <td>稲積さん</td>
+    </tr>
+    <tr>
+      <td><span class="tag plan2">起案 2</span></td>
+      <td><strong>解決確認ボタンの実装</strong> ─ 回答末尾に「解決した／解決しなかった」の2択を設置し、どの質問で解決しなかったかを記録。効果検証のサイクルを回す（「入会前/入会後」の事前選択は効果測定後のPhase 2）</td>
+      <td>小林</td>
+    </tr>
+    <tr>
+      <td><span class="tag tech">技術改修 a</span></td>
+      <td><strong>キーワード列の読み込み対応</strong> ─ 現在のシステムは質問・回答の2列しかAIに渡しておらず、新データが頼る「補足・キーワード」列（表記ゆれ対応）が無効。GASを改修して渡すようにする</td>
+      <td>小林</td>
+    </tr>
+    <tr>
+      <td><span class="tag tech">技術改修 b</span></td>
+      <td><strong>推測合成の禁止ルール追加</strong> ─ システムプロンプトに「QA集にない条件の組み合わせは推測で合成せず、必ず問い合わせを案内する」を追加。ハルシネーションの直接ガード</td>
+      <td>小林</td>
+    </tr>
+    <tr>
+      <td><span class="tag tech">技術改修 c</span></td>
+      <td><strong>反映時のキャッシュ対策</strong> ─ システムはQAデータをキャッシュしており、シートを差し替えてもしばらく旧データで回答し続ける。反映時にキャッシュをクリアする（見落とすと「反映したのに直らない」事故になる）</td>
+      <td>小林</td>
+    </tr>
+  </table>
+
+  <!-- ============ ステップ ============ -->
+  <h2>4. ステップ <span class="sub">進め方と現在地</span></h2>
+  <div class="timeline">
+
+    <div class="step done">
+      <div class="badge">✔</div>
+      <div class="body">
+        <div class="head"><h3>STEP 1｜課題分析と改善方針の合意</h3><span class="status done">完了</span><span class="who">稲積さん／局会</span></div>
+        <ul>
+          <li>ハルシネーションの原因を「似た情報の分散」と特定し、統合方針（マスターFAQ化・誘導特化・主語の徹底）を局会で合意</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step done">
+      <div class="badge">✔</div>
+      <div class="body">
+        <div class="head"><h3>STEP 2｜統合FAQデータの作成</h3><span class="status done">完了</span><span class="who">稲積さん・CS ｜ 〜8/22</span></div>
+        <ul>
+          <li>「ChatBot修正内容」シートに27のマスターQ&Aを作成、CS内で項目チェック → 8/25に小林へ共有済み</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step now">
+      <div class="badge">▶</div>
+      <div class="body">
+        <div class="head"><h3>STEP 3｜品質チェックと指摘修正 ─ 今ここ</h3><span class="status now">進行中</span><span class="who">小林 ⇄ 稲積さん</span></div>
+        <ul>
+          <li><strong>済：</strong>新旧全314項目の突き合わせチェック完了（8/25）→ 統合品質は高い。ただし指摘4点あり（下記「5. 品質チェック結果」参照）</li>
+          <li><strong>次：</strong>修正案・追記案を作成し稲積さんに確認 → シートを最終版に更新</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step wait">
+      <div class="badge">4</div>
+      <div class="body">
+        <div class="head"><h3>STEP 4｜本番反映（安全策つき）</h3><span class="status wait">未着手</span><span class="who">小林 ｜ 修正確認後すぐ</span></div>
+        <ul>
+          <li>① 現行QAシートのバックアップタブ作成（即ロールバック可能に）</li>
+          <li>② 回帰テスト20問を準備（ブレやすい振替・欠席／測定会／コース編成＋実際に混同事故が起きた質問）</li>
+          <li>③ 新データに差し替え → GAS改修（技術改修a・b）→ キャッシュクリア（技術改修c）</li>
+          <li>④ 反映前後で20問の回答を比較 → 問題なければ本番確定、劣化があれば即ロールバック</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step wait">
+      <div class="badge">5</div>
+      <div class="body">
+        <div class="head"><h3>STEP 5｜解決確認ボタンの実装</h3><span class="status wait">未着手</span><span class="who">小林 ｜ 目標 8/29</span></div>
+        <ul>
+          <li>ウィジェットに「この回答で解決しましたか？」＋2択ボタンを追加</li>
+          <li>どの質問で「解決しなかった」かを問い合わせ履歴シートに記録（抽出タブも用意）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step wait">
+      <div class="badge">6</div>
+      <div class="body">
+        <div class="head"><h3>STEP 6｜効果測定と次の打ち手</h3><span class="status wait">未着手</span><span class="who">CS・小林 ｜ 9月中</span></div>
+        <ul>
+          <li>解決率・「お問い合わせください」で逃げた率を2〜4週モニタリング（反映前の履歴からベースラインも算出し前後比較）</li>
+          <li>結果を見て Phase 2（「入会前/入会後」の事前選択、セグメント別QA絞り込み）を局会で判断</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ チェック結果 ============ -->
+  <h2>5. 品質チェック結果 <span class="sub">8/25実施 ─ 反映前に直す4点</span></h2>
+  <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">
+    旧314項目それぞれについて新27マスターでの回答可否を突き合わせた結果、<strong>大半（308項目分の内容）は適切に統合・吸収済み</strong>。以下のみ反映前に対応する。
+  </p>
+  <div class="findings">
+    <div class="finding">
+      <span class="sev must">🔴 修正必須</span>
+      <h3>① 文字化けの混入（master-027）</h3>
+      <p>本文に「レッ<u>&#2486;&#2497;&#2453;</u>の継続が…」と外国語文字が混入（「レッスン」の破損）。このままだとAIが破損文をそのまま引用するリスクあり。</p>
+    </div>
+    <div class="finding">
+      <span class="sev should">🟡 修正推奨</span>
+      <h3>② 誤字2箇所（master-007 / 018）</h3>
+      <p>質問文に不要な「ｍ」の混入、区切りがタブ文字になっている箇所。動作影響は軽微だが最終版で清書する。</p>
+    </div>
+    <div class="finding">
+      <span class="sev should">🟡 追記提案</span>
+      <h3>③ 「入会前の不安・効果」系の情報が6件落ちている</h3>
+      <p>早稲田大学（広瀬教授）監修とは？／早生まれ・体力への不安／体育に役立つ？／食物アレルギー等。<strong>体験検討中の親からの質問＝入会率に効く安心材料</strong>のため、master-004と024に数行ずつ追記して復活させる。</p>
+    </div>
+    <div class="finding">
+      <span class="sev must">🔴 対応必須（コード側）</span>
+      <h3>④ キーワード列がAIに渡っていない</h3>
+      <p>新データは「補足・キーワード」列（<code>お下がり</code>・<code>難聴</code>・<code>トイトレ</code>等の表記ゆれ）に依存する設計だが、現行システムはこの列を読んでいない。GAS改修（技術改修a）とセットで反映しないと統合の狙いが半減する。</p>
+    </div>
+  </div>
+
+  <!-- ============ 関連リソース ============ -->
+  <h2>6. 関連リソース</h2>
+  <table>
+    <tr><th style="width:260px;">リソース</th><th>内容</th></tr>
+    <tr><td><a href="https://docs.google.com/spreadsheets/d/1hmMi2XnQPK0DeSuIdlsmj_-Mq32L5-W4KS4N7aKwnKc/edit" target="_blank">【CS】チャットbot｜QA_master</a></td><td>本番の参照データ。QA参照元シート（現行314件）／問い合わせ履歴（27,592件）／よくある質問／校舎URL一覧／吸い上げシート</td></tr>
+    <tr><td><a href="https://docs.google.com/spreadsheets/d/1__ZUsoUB_TJpsPp1ezquBPVU8puInC4M_HoFmoSnM0U/edit?gid=1452600503" target="_blank">【CS】改善施策管理シート ＞ ChatBot修正内容</a></td><td>統合後の新FAQデータ（27マスターQ&A）＝ STEP 4 で差し替える中身</td></tr>
+    <tr><td><a href="https://docs.google.com/presentation/d/1hOZYdMMKpRFrsOLdvs2_12amu5cXCdOBDRWr-MD1MHg/edit" target="_blank">課題報告スライド（稲積さん）</a></td><td>現状課題と改善策 ─ 課題①②③と改善3ステップ</td></tr>
+    <tr><td><a href="https://docs.google.com/presentation/d/1vMuPZxmTnXJbHFc9VpGqvNgOkDLHn7u_7-uPJsCpe1U/edit" target="_blank">起案スライド（稲積さん）</a></td><td>FAQ最適化の反映承認＋解決確認ボタンの実装依頼（8/29希望）</td></tr>
+    <tr><td>ローカル開発フォルダ <code>~/chat bot/</code></td><td>ウィジェット本体（biima_chatbot_全ページ用_修正版.html）／バックエンド（gas_code.js）</td></tr>
+  </table>
+
+  <footer>biima sports AIチャットボット改善プロジェクト ｜ 2026-08-25 時点 ｜ 作成：小林 × Claude</footer>
+</div>
+</body>
+</html>
