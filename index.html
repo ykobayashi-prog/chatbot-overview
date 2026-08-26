@@ -152,7 +152,7 @@
     <div class="kicker">biima sports ｜ CS下期テーマ × マーケ局</div>
     <h1>AIチャットボット 回答精度改善プロジェクト 全体像</h1>
     <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月26日</div>
-    <div class="now-banner"><span class="dot"></span>現在地：STEP 4 ─ 新FAQデータ本番反映済み・回帰テスト21問合格。残り＝システム改修の反映のみ</div>
+    <div class="now-banner"><span class="dot"></span>現在地：STEP 4 完了（データ＋システム改修とも本番反映済み）─ 次は STEP 5 解決確認ボタンの実装</div>
   </header>
 
   <!-- ============ 課題 ============ -->
@@ -270,24 +270,23 @@
       </div>
     </div>
 
-    <div class="step now">
-      <div class="badge">▶</div>
+    <div class="step done">
+      <div class="badge">✔</div>
       <div class="body">
-        <div class="head"><h3>STEP 4｜本番反映（安全策つき）─ 今ここ</h3><span class="status now">ほぼ完了</span><span class="who">小林 ｜ 8/26</span></div>
+        <div class="head"><h3>STEP 4｜本番反映（安全策つき）</h3><span class="status done">完了</span><span class="who">小林 ｜ 8/26</span></div>
         <ul>
-          <li><strong>済：</strong>① 現行QAのバックアップタブ作成（QA参照元シート_bk20260826 ─ 即ロールバック可能）</li>
-          <li><strong>済：</strong>② 実際の問い合わせ履歴から回帰テスト21問を作成 → 旧データでの回答を取得（ベースライン）</li>
-          <li><strong>済：</strong>③ 本番QAシートを27マスターに差し替え（8/26）→ キャッシュ失効を確認し新データ稼働中</li>
-          <li><strong>済：</strong>④ 反映後に同じ21問を再実行し前後比較 → <strong>劣化なし・合格</strong>。対象年齢外振替の架空回答が正しい「不可」案内に改善、測定会はお知らせ誘導に、休会費用も最新情報に</li>
-          <li><strong>残：</strong>⑤ システム改修（キーワード列対応＋推測合成禁止）のコード反映 ─ 改修版は作成済み、本体プロジェクトへの貼り付けのみ</li>
+          <li>① 現行QAのバックアップタブ作成（QA参照元シート_bk20260826 ─ 即ロールバック可能）</li>
+          <li>② 実際の問い合わせ履歴から回帰テスト21問を作成 → 旧データの回答を取得（ベースライン）</li>
+          <li>③ 本番QAシートを27マスターに差し替え → ④ 同じ21問で前後比較 → <strong>劣化なし・合格</strong>。対象年齢外振替の架空回答が正しい「不可」案内に改善、測定会はお知らせ誘導に、休会費用も最新情報に</li>
+          <li>⑤ システム改修（キーワード列対応＋推測合成禁止＋APIキー保護）を本番反映。検証4問合格 ─ キーワード経由の質問（難聴・ママ友）に正答、<strong>「振替と欠席のキャンセルはどちらも当日まで？」の混同トラップに「いいえ、期限は異なります」と正しく回答</strong></li>
         </ul>
       </div>
     </div>
 
-    <div class="step wait">
-      <div class="badge">5</div>
+    <div class="step now">
+      <div class="badge">▶</div>
       <div class="body">
-        <div class="head"><h3>STEP 5｜解決確認ボタンの実装</h3><span class="status wait">未着手</span><span class="who">小林 ｜ 目標 8/29</span></div>
+        <div class="head"><h3>STEP 5｜解決確認ボタンの実装 ─ 次はここ</h3><span class="status now">準備中</span><span class="who">小林 ｜ 目標 8/29</span></div>
         <ul>
           <li>ウィジェットに「この回答で解決しましたか？」＋2択ボタンを追加</li>
           <li>どの質問で「解決しなかった」かを問い合わせ履歴シートに記録（抽出タブも用意）</li>
