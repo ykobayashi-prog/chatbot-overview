@@ -151,8 +151,8 @@
   <header class="hero">
     <div class="kicker">biima sports ｜ CS下期テーマ × マーケ局</div>
     <h1>AIチャットボット 回答精度改善プロジェクト 全体像</h1>
-    <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月25日</div>
-    <div class="now-banner"><span class="dot"></span>現在地：STEP 3 ─ 統合FAQの品質チェック完了、指摘4点の修正対応中</div>
+    <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月26日</div>
+    <div class="now-banner"><span class="dot"></span>現在地：STEP 4 ─ 新FAQデータ本番反映済み・回帰テスト21問合格。残り＝システム改修の反映のみ</div>
   </header>
 
   <!-- ============ 課題 ============ -->
@@ -260,26 +260,26 @@
       </div>
     </div>
 
-    <div class="step now">
-      <div class="badge">▶</div>
+    <div class="step done">
+      <div class="badge">✔</div>
       <div class="body">
-        <div class="head"><h3>STEP 3｜品質チェックと指摘修正 ─ 今ここ</h3><span class="status now">進行中</span><span class="who">小林 ⇄ 稲積さん</span></div>
+        <div class="head"><h3>STEP 3｜品質チェックと指摘修正</h3><span class="status done">完了</span><span class="who">小林 ⇄ 稲積さん ｜ 8/26</span></div>
         <ul>
-          <li><strong>済：</strong>新旧全314項目の突き合わせチェック完了（8/25）→ 統合品質は高い。ただし指摘4点あり（下記「5. 品質チェック結果」参照）</li>
-          <li><strong>次：</strong>修正案・追記案を作成し稲積さんに確認 → シートを最終版に更新</li>
+          <li>新旧全314項目の突き合わせチェック（8/25）→ 指摘4点のうちシート側3点を稲積さんが修正、8/26に解消確認</li>
         </ul>
       </div>
     </div>
 
-    <div class="step wait">
-      <div class="badge">4</div>
+    <div class="step now">
+      <div class="badge">▶</div>
       <div class="body">
-        <div class="head"><h3>STEP 4｜本番反映（安全策つき）</h3><span class="status wait">未着手</span><span class="who">小林 ｜ 修正確認後すぐ</span></div>
+        <div class="head"><h3>STEP 4｜本番反映（安全策つき）─ 今ここ</h3><span class="status now">ほぼ完了</span><span class="who">小林 ｜ 8/26</span></div>
         <ul>
-          <li>① 現行QAシートのバックアップタブ作成（即ロールバック可能に）</li>
-          <li>② 回帰テスト20問を準備（ブレやすい振替・欠席／測定会／コース編成＋実際に混同事故が起きた質問）</li>
-          <li>③ 新データに差し替え → GAS改修（技術改修a・b）→ キャッシュクリア（技術改修c）</li>
-          <li>④ 反映前後で20問の回答を比較 → 問題なければ本番確定、劣化があれば即ロールバック</li>
+          <li><strong>済：</strong>① 現行QAのバックアップタブ作成（QA参照元シート_bk20260826 ─ 即ロールバック可能）</li>
+          <li><strong>済：</strong>② 実際の問い合わせ履歴から回帰テスト21問を作成 → 旧データでの回答を取得（ベースライン）</li>
+          <li><strong>済：</strong>③ 本番QAシートを27マスターに差し替え（8/26）→ キャッシュ失効を確認し新データ稼働中</li>
+          <li><strong>済：</strong>④ 反映後に同じ21問を再実行し前後比較 → <strong>劣化なし・合格</strong>。対象年齢外振替の架空回答が正しい「不可」案内に改善、測定会はお知らせ誘導に、休会費用も最新情報に</li>
+          <li><strong>残：</strong>⑤ システム改修（キーワード列対応＋推測合成禁止）のコード反映 ─ 改修版は作成済み、本体プロジェクトへの貼り付けのみ</li>
         </ul>
       </div>
     </div>
