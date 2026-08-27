@@ -151,8 +151,8 @@
   <header class="hero">
     <div class="kicker">biima sports ｜ CS下期テーマ × マーケ局</div>
     <h1>AIチャットボット 回答精度改善プロジェクト 全体像</h1>
-    <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月26日</div>
-    <div class="now-banner"><span class="dot"></span>現在地：STEP 4 完了（データ＋システム改修とも本番反映済み）─ 次は STEP 5 解決確認ボタンの実装</div>
+    <div class="meta">課題提起：稲積さん（CS）／ 実装・反映：小林 ／ 最終更新：2026年8月27日</div>
+    <div class="now-banner"><span class="dot"></span>現在地：STEP 5 完了（解決確認ボタン 本番稼働開始 8/27）─ 次は STEP 6 効果測定</div>
   </header>
 
   <!-- ============ 課題 ============ -->
@@ -283,21 +283,22 @@
       </div>
     </div>
 
-    <div class="step now">
-      <div class="badge">▶</div>
+    <div class="step done">
+      <div class="badge">✔</div>
       <div class="body">
-        <div class="head"><h3>STEP 5｜解決確認ボタンの実装 ─ 次はここ</h3><span class="status now">準備中</span><span class="who">小林 ｜ 目標 8/29</span></div>
+        <div class="head"><h3>STEP 5｜解決確認ボタンの実装</h3><span class="status done">完了（8/27・目標より2日前倒し）</span><span class="who">小林</span></div>
         <ul>
-          <li>ウィジェットに「この回答で解決しましたか？」＋2択ボタンを追加</li>
-          <li>どの質問で「解決しなかった」かを問い合わせ履歴シートに記録（抽出タブも用意）</li>
+          <li>各回答の末尾に「この回答で解決しましたか？」＋「解決した／解決しなかった」ボタンを実装（PC版ウィジェット・スマホ版chat.htmlの両方）</li>
+          <li>「解決した」→ お礼＋よくある質問を再表示 ／「解決しなかった」→ 関連質問＋お問い合わせ誘導</li>
+          <li>記録はQA_masterスプシの「<strong>解決フィードバック</strong>」タブに自動蓄積（日時・セッション・質問・判定・セッション内の何問目か）→ 解決率と離脱ポイントを集計可能</li>
         </ul>
       </div>
     </div>
 
-    <div class="step wait">
-      <div class="badge">6</div>
+    <div class="step now">
+      <div class="badge">▶</div>
       <div class="body">
-        <div class="head"><h3>STEP 6｜効果測定と次の打ち手</h3><span class="status wait">未着手</span><span class="who">CS・小林 ｜ 9月中</span></div>
+        <div class="head"><h3>STEP 6｜効果測定と次の打ち手 ─ 次はここ</h3><span class="status now">データ蓄積中</span><span class="who">CS・小林 ｜ 9月中</span></div>
         <ul>
           <li>解決率・「お問い合わせください」で逃げた率を2〜4週モニタリング（反映前の履歴からベースラインも算出し前後比較）</li>
           <li>結果を見て Phase 2（「入会前/入会後」の事前選択、セグメント別QA絞り込み）を局会で判断</li>
