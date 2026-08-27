@@ -202,8 +202,8 @@
     </div>
     <div class="tile">
       <div class="label">解決率の計測</div>
-      <div class="value"><span class="from">不可</span><span class="arrow">→</span>可能に</div>
-      <div class="note">解決確認ボタンを新規実装</div>
+      <div class="value"><span class="from">不可</span><span class="arrow">→</span>稼働中</div>
+      <div class="note">解決確認ボタン 8/27リリース・記録蓄積中</div>
     </div>
   </div>
 
@@ -308,30 +308,30 @@
   </div>
 
   <!-- ============ チェック結果 ============ -->
-  <h2>5. 品質チェック結果 <span class="sub">8/25実施 ─ 反映前に直す4点</span></h2>
+  <h2>5. 品質チェック結果 <span class="sub">8/25実施・指摘4点 → 全件対応済み</span></h2>
   <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">
-    旧314項目それぞれについて新27マスターでの回答可否を突き合わせた結果、<strong>大半（308項目分の内容）は適切に統合・吸収済み</strong>。以下のみ反映前に対応する。
+    旧314項目それぞれについて新27マスターでの回答可否を突き合わせた結果、大半は適切に統合・吸収済み。指摘した4点も<strong>すべて対応が完了</strong>している。
   </p>
   <div class="findings">
     <div class="finding">
-      <span class="sev must">🔴 修正必須</span>
+      <span class="sev" style="background:var(--good-bg);color:var(--good);">✅ 対応済み（8/26）</span>
       <h3>① 文字化けの混入（master-027）</h3>
-      <p>本文に「レッ<u>&#2486;&#2497;&#2453;</u>の継続が…」と外国語文字が混入（「レッスン」の破損）。このままだとAIが破損文をそのまま引用するリスクあり。</p>
+      <p>本文に外国語文字が混入（「レッスン」の破損）→ 稲積さんが修正、全27件の機械チェックで解消を確認。</p>
     </div>
     <div class="finding">
-      <span class="sev should">🟡 修正推奨</span>
+      <span class="sev" style="background:var(--good-bg);color:var(--good);">✅ 対応済み（8/26）</span>
       <h3>② 誤字2箇所（master-007 / 018）</h3>
-      <p>質問文に不要な「ｍ」の混入、区切りがタブ文字になっている箇所。動作影響は軽微だが最終版で清書する。</p>
+      <p>質問文への不要な「ｍ」混入・タブ文字の区切り → 両方修正済み。</p>
     </div>
     <div class="finding">
-      <span class="sev should">🟡 追記提案</span>
-      <h3>③ 「入会前の不安・効果」系の情報が6件落ちている</h3>
-      <p>早稲田大学（広瀬教授）監修とは？／早生まれ・体力への不安／体育に役立つ？／食物アレルギー等。<strong>体験検討中の親からの質問＝入会率に効く安心材料</strong>のため、master-004と024に数行ずつ追記して復活させる。</p>
+      <span class="sev" style="background:var(--good-bg);color:var(--good);">✅ 対応済み（8/26）</span>
+      <h3>③ 「入会前の不安・効果」系の情報が6件落ちていた</h3>
+      <p>早稲田監修・早生まれ・体力の不安・体育・アレルギー等、<strong>体験検討中の親に効く安心材料</strong>をmaster-004/024へ追記（キーワード列も拡充）。</p>
     </div>
     <div class="finding">
-      <span class="sev must">🔴 対応必須（コード側）</span>
-      <h3>④ キーワード列がAIに渡っていない</h3>
-      <p>新データは「補足・キーワード」列（<code>お下がり</code>・<code>難聴</code>・<code>トイトレ</code>等の表記ゆれ）に依存する設計だが、現行システムはこの列を読んでいない。GAS改修（技術改修a）とセットで反映しないと統合の狙いが半減する。</p>
+      <span class="sev" style="background:var(--good-bg);color:var(--good);">✅ 対応済み（8/26）</span>
+      <h3>④ キーワード列がAIに渡っていなかった</h3>
+      <p>GAS改修で「補足・キーワード」列を読み込むよう対応。キーワード列にしかない言い回し（<code>難聴</code>・<code>ママ友</code>等）でも正答することを本番で検証済み。</p>
     </div>
   </div>
 
@@ -343,7 +343,8 @@
     <tr><td><a href="https://docs.google.com/spreadsheets/d/1__ZUsoUB_TJpsPp1ezquBPVU8puInC4M_HoFmoSnM0U/edit?gid=1452600503" target="_blank">【CS】改善施策管理シート ＞ ChatBot修正内容</a></td><td>統合後の新FAQデータ（27マスターQ&A）＝ STEP 4 で差し替える中身</td></tr>
     <tr><td><a href="https://docs.google.com/presentation/d/1hOZYdMMKpRFrsOLdvs2_12amu5cXCdOBDRWr-MD1MHg/edit" target="_blank">課題報告スライド（稲積さん）</a></td><td>現状課題と改善策 ─ 課題①②③と改善3ステップ</td></tr>
     <tr><td><a href="https://docs.google.com/presentation/d/1vMuPZxmTnXJbHFc9VpGqvNgOkDLHn7u_7-uPJsCpe1U/edit" target="_blank">起案スライド（稲積さん）</a></td><td>FAQ最適化の反映承認＋解決確認ボタンの実装依頼（8/29希望）</td></tr>
-    <tr><td>ローカル開発フォルダ <code>~/chat bot/</code></td><td>ウィジェット本体（biima_chatbot_全ページ用_修正版.html）／バックエンド（gas_code.js）</td></tr>
+    <tr><td><a href="https://docs.google.com/spreadsheets/d/1hmMi2XnQPK0DeSuIdlsmj_-Mq32L5-W4KS4N7aKwnKc/edit" target="_blank">解決フィードバックタブ（QA_master内）</a></td><td>解決した/しなかったの記録（8/27〜蓄積中）。日時・質問・判定・セッション内の何問目か ＝ STEP 6の集計元</td></tr>
+    <tr><td>ローカル開発フォルダ <code>~/chat bot/</code></td><td>本番反映済みの正本＝<code>アップ用/</code>（footer-school21.php・chat.html）／バックエンド最新＝gas_code_v3.js／反映前バックアップ＝footer-school21_backup_20260827.php</td></tr>
   </table>
 
   <footer>biima sports AIチャットボット改善プロジェクト ｜ 2026-08-25 時点 ｜ 作成：小林 × Claude</footer>
